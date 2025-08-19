@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GameHub • Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0c0f1a;
+      --bg2:#12172a;
+      --card:#1b2138;
+      --text:#e8eefc;
+      --muted:#9fb0c9;
+      --accentA:#ff7a7a;
+      --accentB:#49d3c3;
+      --accentC:#6bc0ff;
+      --outline:#2f3a5a;
+      --glow: 0 0 30px rgba(73,211,195,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background: radial-gradient(1200px 800px at 20% -10%, #1a2241 0%, transparent 60%),
+                  radial-gradient(900px 700px at 95% 30%, #152045 0%, transparent 55%),
+                  linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      background-attachment: fixed;
+    }
+
+    /* Top nav */
+    .nav{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(12,15,26,.9), rgba(12,15,26,.65));
+      border-bottom:1px solid #1f2743;
+    }
+    .nav-inner{
+      max-width:1120px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;
+      padding:14px 18px;
+    }
+    .brand{
+      font-weight:900; letter-spacing:.4px; font-size:26px;
+      background:linear-gradient(90deg, var(--accentA), var(--accentB));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      position:relative;
+      animation:pulse 2.6s ease-in-out infinite;
+      text-shadow: 0 0 0 rgba(0,0,0,0);
+    }
+    @keyframes pulse {
+      0%,100%{ filter:drop-shadow(0 0 0 rgba(73,211,195,.0)); transform:translateZ(0) scale(1); }
+      50%     { filter:drop-shadow(0 0 12px rgba(73,211,195,.55)); transform:translateZ(0) scale(1.02); }
+    }
+    .nav-links a{
+      color:var(--muted); text-decoration:none; margin-left:22px; font-weight:600; font-size:14px;
+    }
+    .nav-links a:hover{color:var(--text)}
+
+    /* Hero */
+    .hero{max-width:1120px; margin:52px auto; padding:24px 18px 8px;}
+    .headline{
+      font-size: clamp(36px, 6vw, 64px);
+      line-height:1.05; margin:60px 0 10px; font-weight:900;
+      background:linear-gradient(90deg, var(--accentA), var(--accentB));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      text-align:center;
+    }
+    .sub{color:var(--muted); text-align:center; font-size:18px; margin-bottom:26px}
+
+    .cta-row{display:flex; gap:14px; justify-content:center; margin:16px 0 44px}
+    .btn{
+      border:none; padding:12px 18px; border-radius:999px; font-weight:700; cursor:pointer;
+      display:inline-flex; align-items:center; justify-content:center;
+      transition:.2s transform, .2s box-shadow, .2s background;
+    }
+    .btn-primary{
+      background:linear-gradient(90deg, var(--accentA), var(--accentB));
+      color:#0b1227; box-shadow: var(--glow);
+    }
+    .btn-primary:hover{transform:translateY(-1px)}
+    .btn-ghost{
+      background:transparent; color:var(--text); border:1px solid #2a3557;
+    }
+    .btn-ghost:hover{background:#121a32}
+
+    /* Carousel */
+    .carousel{
+      position:relative; overflow:hidden; border-radius:18px; border:1px solid var(--outline);
+      background:#0f1324;
+    }
+    .carousel img{
+      width:100%; height:420px; object-fit:cover; display:block; opacity:.9;
+    }
+    .dots{position:absolute; left:14px; bottom:12px; display:flex; gap:8px}
+    .dot{width:9px; height:9px; border-radius:50%; background:#6a7395; opacity:.65}
+    .dot.active{background:linear-gradient(90deg, var(--accentA), var(--accentB)); opacity:1}
+
+    /* Featured section */
+    .section{max-width:1120px; margin:70px auto; padding:0 18px}
+    .title{
+      font-size: clamp(28px, 4.5vw, 48px);
+      font-weight:900; text-align:center; margin:18px 0 26px;
+      background:linear-gradient(90deg, var(--accentA), var(--accentB));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:22px}
+    .card{
+      background: linear-gradient(180deg, #151b31, #131833);
+      border:1px solid var(--outline); border-radius:16px; padding:22px; box-shadow: 0 8px 30px rgba(0,0,0,.25);
+    }
+    .icon{
+      width:70px; height:70px; border-radius:50%;
+      background:linear-gradient(135deg, var(--accentA), var(--accentB));
+      display:grid; place-items:center; margin:6px auto 12px; color:#0b1227; font-size:28px; font-weight:900;
+    }
+    .card h3{margin:6px 0 8px; text-align:center}
+    .card p{color:var(--muted); font-size:14px; text-align:center; min-height:44px}
+    .price{color:#ff8f8f; font-weight:900; text-align:center; margin-top:10px}
+
+    /* Footer */
+    footer{color:#7f8db2; font-size:13px; text-align:center; padding:36px 0 60px}
+    /* helpers */
+    .grid-bg{
+      background-image:
+        linear-gradient(transparent 31px, rgba(255,255,255,.03) 32px),
+        linear-gradient(90deg, transparent 31px, rgba(255,255,255,.03) 32px);
+      background-size:32px 32px;
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="brand">GameHub</div>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/products">Games</a>
+        <a href="#about">About</a>
+        <a href="/cart">Cart</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero grid-bg">
+      <h1 class="headline">Welcome to GameHub</h1>
+      <p class="sub">Discover the latest and greatest games for every platform</p>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/products.html">Browse Games</a>
+        <a class="btn btn-ghost" href="#featured">Featured Games</a>
+      </div>
+
+      <!-- CAROUSEL -->
+      <div class="carousel" id="carousel">
+        <img id="slide" alt="Featured Game">
+        <div class="dots" id="dots"></div>
+      </div>
+    </section>
+
+	 <!-- FEATURED -->
+	    <section class="section" id="featured">
+	      <h2 class="title">Featured Games</h2>
+	      <div class="cards">
+	        <article class="card">
+	          <div class="icon">🎮</div>
+	          <h3>Cyber Quest 2024</h3>
+	          <p>An epic sci‑fi adventure with stunning visuals and immersive gameplay</p>
+	          <div class="price">$59.99</div>
+	        </article>
+	        <article class="card">
+	          <div class="icon">✈️</div>
+	          <h3>Fantasy Legends</h3>
+	          <p>Embark on a magical journey through enchanted realms</p>
+	          <div class="price">$49.99</div>
+	        </article>
+	        <article class="card">
+	          <div class="icon">🏎️</div>
+	          <h3>Speed Racers</h3>
+	          <p>High‑octane racing action with customizable vehicles</p>
+	          <div class="price">$39.99</div>
+	        </article>
+	      </div>
+	    </section>
+	  </main>
+
+	  <footer id="about">© <span id="y"></span> GameHub. All rights reserved.</footer>
+
+	  <script>
+	    // year
+	    document.getElementById('y').textContent = new Date().getFullYear();
+
+	    // Simple image carousel (no libraries)
+	    const images = [
+	      'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop',
+	      'https://images.unsplash.com/photo-1618005198919-d3d4b5a92eaf?q=80&w=1600&auto=format&fit=crop',
+	      'https://images.unsplash.com/photo-1529619768328-e37af76c6fe5?q=80&w=1600&auto=format&fit=crop'
+	    ];
+	    const slide = document.getElementById('slide');
+	    const dotsWrap = document.getElementById('dots');
+	    let i = 0;
+
+	    function renderDots(){
+	      dotsWrap.innerHTML = '';
+	      images.forEach((_, idx)=>{
+	        const d=document.createElement('div');
+	        d.className='dot'+(idx===i?' active':'');
+	        d.addEventListener('click',()=>{ i=idx; show(); reset(); });
+	        dotsWrap.appendChild(d);
+	      });
+	    }
+	    function show(){
+	      slide.src = images[i];
+	      renderDots();
+	    }
+	    let timer;
+	    function play(){
+	      timer = setInterval(()=>{ i=(i+1)%images.length; show(); }, 3500);
+	    }
+	    function reset(){ clearInterval(timer); play(); }
+
+	    show(); play();
+	  </script>
+	</body>
+	</html>
