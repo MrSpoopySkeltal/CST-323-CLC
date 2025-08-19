@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:layout="https://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,50 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-  :root{ --bg:#0c0f1a; --bg2:#12172a; --text:#e8eefc; --muted:#9fb0c9; --card:#151b31; --outline:#2f3a5a; --accentA:#ff7a7a; --accentB:#49d3c3; }
-  *{box-sizing:border-box}
-  body{ margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial; color:var(--text);
-        background: radial-gradient(1200px 800px at 20% -10%, #1a2241 0%, transparent 60%),
-                   radial-gradient(900px 700px at 95% 30%, #152045 0%, transparent 55%),
-                   linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%); }
-
-  .nav{ position:sticky; top:0; z-index:20; backdrop-filter: blur(10px);
-        background: linear-gradient(180deg, rgba(12,15,26,.9), rgba(12,15,26,.65));
-        border-bottom:1px solid #1f2743; }
-  .nav-inner{ max-width:1120px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:14px 18px; }
-  .brand{ font-weight:900; letter-spacing:.4px; font-size:26px; background:linear-gradient(90deg, var(--accentA), var(--accentB));
-          -webkit-background-clip:text; background-clip:text; color:transparent; animation:pulse 2.6s ease-in-out infinite; }
-  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
-  .nav-links a{ color:#9fb0c9; text-decoration:none; margin-left:22px; font-weight:600; font-size:14px }
-  .nav-links a:hover{ color:var(--text) }
-
-  .wrap{ max-width:1120px; margin:42px auto 60px; padding:0 18px; }
-  .title{ font-size: clamp(32px, 5vw, 56px); font-weight:900; text-align:center;
-          background:linear-gradient(90deg, var(--accentA), var(--accentB));
-          -webkit-background-clip:text; background-clip:text; color:transparent; margin:10px 0 8px; }
-  .sub{ color:var(--muted); text-align:center; margin-bottom:24px }
-
-  .filters{ background:#121a32; border:1px solid var(--outline); border-radius:16px; padding:14px; display:grid; gap:12px;
-            grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
-  .field{ display:flex; flex-direction:column; gap:6px; }
-  label{ color:#c7d3ee; font-weight:700; font-size:12px; letter-spacing:.4px; text-transform:uppercase }
-  select, input{
-    width:100%; background:#0e1429; color:var(--text); border:1px solid #2a3557; border-radius:10px; padding:10px 12px; outline:none;
-  }
-  .grid{ margin-top:22px; display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
-  .card{ background: linear-gradient(180deg, #151b31, #131833); border:1px solid var(--outline); border-radius:16px; overflow:hidden }
-  .thumb{ width:100%; height:160px; object-fit:cover; display:block }
-  .pad{ padding:14px }
-  .name{ font-weight:800; margin:6px 0 }
-  .meta{ color:#a3b1cf; font-size:13px }
-  .price{ margin-top:10px; font-weight:900; color:#ff8f8f }
-  .btn{
-    display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; border:none; border-radius:999px; padding:10px 14px; font-weight:800;
-  }
-  .btn-primary{ background:linear-gradient(90deg, var(--accentA), var(--accentB)); color:#0b1227; }
-  .center{ text-align:center; margin:26px 0 60px }
-</style>
+<link rel="stylesheet" th:href="@{/css/products.css}"> <!-- COvermyer: MOVED CSS TO EXTERNAL FILE FOR CONVENIENCE -->
 </head>
 <body>
   <header class="nav">
@@ -69,111 +26,75 @@
     <h1 class="title">Browse Games</h1>
     <p class="sub">Discover your next favorite game from our extensive collection</p>
 
-    <!-- Filters -->
-    <section class="filters">
-      <div class="field">
-        <label for="genre">Genre</label>
-        <select id="genre">
-          <option value="">All Genres</option>
-          <option>Action</option><option>RPG</option><option>Racing</option><option>Adventure</option><option>Sports</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="platform">Platform</label>
-        <select id="platform">
-          <option value="">All Platforms</option>
-          <option>PC</option><option>PlayStation</option><option>Xbox</option><option>Nintendo</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="maxPrice">Max Price</label>
-        <select id="maxPrice">
-          <option value="">Any Price</option>
-          <option value="20">$20</option>
-          <option value="40">$40</option>
-          <option value="60">$60</option>
-        </select>
-      </div>
-      <div class="field">
-        <label for="minRating">Min Rating</label>
-        <select id="minRating">
-          <option value="">Any Rating</option>
-          <option value="3">3+</option>
-          <option value="4">4+</option>
-          <option value="4.5">4.5+</option>
-        </select>
-      </div>
-    </section>
+	<!-- COvermyer: MOVED FILTERING TO FORM TO ALLOW THYMELEAF ACTIONS-->
+	<form method="get" class="filters" th:action="@{/games}">
+		<div class="field">
+			<label for="genre">Genre</label>
+			<select id="genre" name="genre" >
+				<option value="" th:selected="${param.genre == null or param.genre == ''}">All Genres</option>
+			<option value="Action" th:selected="${param.genre == 'Action'}">Action</option>
+			<option value="RPG" th:selected="${param.genre == 'RPG'}">RPG</option>
+			<option value="Racing" th:selected="${param.genre == 'Racing'}">Racing</option>
+			<option value="Adventure" th:selected="${param.genre == 'Adventure'}">Adventure</option>
+			<option value="Sports" th:selected="${param.genre == 'Sports'}">Sports</option>
+		</select>
+		</div>
+		<div class="field">
+			<label for="platform">Platform</label>
+			<select id="platform" name="platform" >
+				<option value="" th:selected="${param.platform == null or param.platform == ''}">All Platforms</option>
+				<option value="PC" th:selected="${param.platform == 'PC'}">PC</option>
+				<option value="PlayStation" th:selected="${param.platform == 'PlayStation'}">PlayStation</option>
+				<option value="Xbox" th:selected="${param.platform == 'Xbox'}">Xbox</option>
+				<option value="Nintendo" th:selected="${param.platform == 'Nintendo'}">Nintendo</option>
+			</select>
+		</div>
+		<div class="field">
+			<label for="maxPrice">Max Price</label>
+			<select id="maxPrice" name="maxPrice">
+				<option value="" th:selected="${param.maxPrice == null or param.maxPrice == ''}">Any Price</option>
+				<option value="20" th:selected="${param.maxPrice == '20'}">$20</option>
+				<option value="40" th:selected="${param.maxPrice == '40'}">$40</option>
+				<option value="60" th:selected="${param.maxPrice == '60'}">$60</option>
+			</select>
+		</div>
+		<div class="field">
+			<label for="minRating">Min Rating</label>
+			<select id="minRating" name="minRating">
+				<option value="" th:selected="${param.minRating == null or param.minRating == ''}">Any Rating</option>
+				<option value="3" th:selected="${param.minRating == '3'}">3+</option>
+				<option value="4" th:selected="${param.minRating == '4'}">4+</option>
+				<option value="4.5" th:selected="${param.minRating == '4.5'}">4.5+</option>
+			</select>
+		</div>
+		
+		<div class="field" style="align-self:flex-end;">
+			<button type="submit" class="btn-primary">Filter</button>
+		</div>	
+	</form>
 
+	<!-- COvermyer: ADDED FOR SERVER SIDER RENDERING -->
     <!-- Results -->
-    <section class="grid" id="grid"></section>
+    <section class="grid" id="grid">
+		<div th:each="game : ${games}">
+			<img class="thumb" th:src="${game.img}" th:alt="${game.title}">
+			<div class="pad">
+				<div class="name" th:text="${game.title}">Game Name</div>
+				<div class="meta" th:text="${game.genre + ' • ' + game.platform + ' • ⭐ ' + game.rating}"></div>
+				<div class="price" th:text="'$' + ${#numbers.formatDecimal(game.price, 1, 2)}"></div>
+			</div>
+		</div>
+		<!-- Show message if no games found -->
+		<p th:if="${#lists.isEmpty(games)}" style="grid-column: 1 / -1; text-align:center; color:var(--muted); font-size:16px;">
+			No games found. Try different filters.
+		</p>
+	</section>
 
     <div class="center">
       <button class="btn btn-primary" id="loadMore">Load More Games</button>
     </div>
   </main>
-
-  <script>
-    // Demo dataset (Her this will be where you put your stuff Caleb)
-    const GAMES = [
-      { id:1, name:"Cyber Quest 2024", genre:"Action", platform:"PC",   price:59.99, rating:4.6, img:"https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop" },
-      { id:2, name:"Fantasy Legends",   genre:"RPG",    platform:"PlayStation", price:49.99, rating:4.4, img:"https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=1200&auto=format&fit=crop" },
-      { id:3, name:"Speed Racers",      genre:"Racing", platform:"Xbox", price:39.99, rating:4.1, img:"https://images.unsplash.com/photo-1542367597-8849ebcd99d3?q=80&w=1200&auto=format&fit=crop" },
-      { id:4, name:"Island Odyssey",    genre:"Adventure", platform:"Nintendo", price:29.99, rating:4.7, img:"https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200&auto=format&fit=crop" },
-      { id:5, name:"Street Strikers",   genre:"Sports", platform:"PlayStation", price:19.99, rating:3.8, img:"https://images.unsplash.com/photo-1521417531039-94d3c6a86b83?q=80&w=1200&auto=format&fit=crop" },
-      { id:6, name:"Dungeon Echoes",    genre:"RPG", platform:"PC", price:44.99, rating:4.9, img:"https://images.unsplash.com/photo-1618005198919-d3d4b5a92eaf?q=80&w=1200&auto=format&fit=crop" },
-      { id:7, name:"Apex Runner",       genre:"Racing", platform:"PC", price:24.99, rating:4.2, img:"https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop" },
-      { id:8, name:"Skylight Saga",     genre:"Adventure", platform:"Xbox", price:34.99, rating:4.0, img:"https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=1200&auto=format&fit=crop" },
-      { id:9, name:"Court Kings",       genre:"Sports", platform:"Nintendo", price:49.99, rating:4.3, img:"https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=1200&auto=format&fit=crop" },
-      { id:10, name:"Shadow Break",     genre:"Action", platform:"PlayStation", price:59.99, rating:4.5, img:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1200&auto=format&fit=crop" },
-      { id:11, name:"Rocket Circuit",   genre:"Racing", platform:"Nintendo", price:39.99, rating:3.9, img:"https://images.unsplash.com/photo-1516116216624-53e697fedbea?q=80&w=1200&auto=format&fit=crop" },
-      { id:12, name:"Mythic Realms",    genre:"RPG", platform:"Xbox", price:59.99, rating:4.7, img:"https://images.unsplash.com/photo-1520975922299-1547142b59b1?q=80&w=1200&auto=format&fit=crop" }
-    ];
-
-    const grid = document.getElementById('grid');
-    const loadMoreBtn = document.getElementById('loadMore');
-    const state = { page:1, per:6 };
-
-    const $ = id => document.getElementById(id);
-    ['genre','platform','maxPrice','minRating'].forEach(id => $(id).addEventListener('change', resetAndRender));
-
-    function resetAndRender(){ state.page=1; grid.innerHTML=''; render(); }
-
-    function applyFilters(list){
-      const genre = $('genre').value;
-      const platform = $('platform').value;
-      const maxPrice = parseFloat($('maxPrice').value || '9999');
-      const minRating = parseFloat($('minRating').value || '0');
-      return list.filter(g =>
-        (!genre || g.genre===genre) &&
-        (!platform || g.platform===platform) &&
-        (g.price <= maxPrice) &&
-        (g.rating >= minRating)
-      );
-    }
-
-    function card(g){
-      return `
-      <article class="card">
-        <img class="thumb" src="${g.img}" alt="${g.name}">
-        <div class="pad">
-          <div class="name">${g.name}</div>
-          <div class="meta">${g.genre} • ${g.platform} • ⭐ ${g.rating.toFixed(1)}</div>
-          <div class="price">$${g.price.toFixed(2)}</div>
-        </div>
-      </article>`;
-    }
-
-    function render(){
-      const filtered = applyFilters(GAMES);
-      const start = 0, end = state.page * state.per;
-      const slice = filtered.slice(start, end);
-      slice.forEach(g => grid.insertAdjacentHTML('beforeend', card(g)));
-      loadMoreBtn.style.display = end < filtered.length ? 'inline-flex' : 'none';
-    }
-
-    loadMoreBtn.addEventListener('click', ()=>{ state.page++; render(); });
-    render();
-  </script>
+  
+  <!-- COvermyer: REMOVED CLIENT SIDE RENDERING-->
 </body>
 </html>
