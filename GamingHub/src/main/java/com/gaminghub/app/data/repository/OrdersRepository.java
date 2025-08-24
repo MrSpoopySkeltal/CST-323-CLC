@@ -8,14 +8,35 @@ import org.springframework.stereotype.Repository;
 
 import com.gaminghub.app.data.entity.OrderEntity;
 
+/**
+ * Repository interface for performing CRUD operations on the {@code orders} table.
+ * <p>
+ * Extends {@link CrudRepository} to provide standard methods for retrieving, counting,
+ * saving, and deleting order entities. Custom SQL queries are provided for the
+ * {@code findAll} and {@code count} methods.
+ * </p>
+ * 
+ * @see CrudRepository
+ * @see OrderEntity
+ */
 @Repository
-public interface OrdersRepository extends CrudRepository<OrderEntity, Integer>{
-	
-	@Override
-	@Query(value="SELECT * FROM orders WHERE 1")
-	public List<OrderEntity> findAll();
-	
-	@Override
-	@Query(value="SELECT COUNT(*) FROM orders WHERE 1")
-	public long count();
+public interface OrdersRepository extends CrudRepository<OrderEntity, Integer> {
+
+    /**
+     * Retrieves all orders from the database.
+     * 
+     * @return a list of all {@link OrderEntity} records
+     */
+    @Override
+    @Query("SELECT * FROM orders WHERE 1")
+    List<OrderEntity> findAll();
+
+    /**
+     * Counts the total number of orders in the database.
+     * 
+     * @return the number of order records
+     */
+    @Override
+    @Query("SELECT COUNT(*) FROM orders WHERE 1")
+    long count();
 }

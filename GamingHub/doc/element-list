@@ -1,0 +1,9 @@
+com.gaminghub.app
+com.gaminghub.app.business
+com.gaminghub.app.controller
+com.gaminghub.app.data
+com.gaminghub.app.data.entity
+com.gaminghub.app.data.mapper
+com.gaminghub.app.data.repository
+com.gaminghub.app.presentation.dto
+com.gaminghub.app.presentation.model
