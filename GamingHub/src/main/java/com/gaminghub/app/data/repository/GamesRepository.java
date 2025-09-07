@@ -27,7 +27,6 @@ public interface GamesRepository extends CrudRepository<GameEntity, Integer> {
      * 
      * @return a list of all {@link GameEntity} records
      */
-    @Override
     @Query("SELECT * FROM games WHERE 1")
     List<GameEntity> findAll();
 
@@ -36,7 +35,6 @@ public interface GamesRepository extends CrudRepository<GameEntity, Integer> {
      * 
      * @return the number of game records
      */
-    @Override
     @Query("SELECT COUNT(*) FROM games WHERE 1")
     long count();
 }

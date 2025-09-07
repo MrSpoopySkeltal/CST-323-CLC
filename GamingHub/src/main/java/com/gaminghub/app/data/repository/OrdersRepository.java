@@ -20,14 +20,13 @@ import com.gaminghub.app.data.entity.OrderEntity;
  * @see OrderEntity
  */
 @Repository
-public interface OrdersRepository extends CrudRepository<OrderEntity, Integer> {
+public interface OrdersRepository extends CustomersRepository<OrderEntity, Integer> {
 
     /**
      * Retrieves all orders from the database.
      * 
      * @return a list of all {@link OrderEntity} records
      */
-    @Override
     @Query("SELECT * FROM orders WHERE 1")
     List<OrderEntity> findAll();
 
@@ -36,7 +35,6 @@ public interface OrdersRepository extends CrudRepository<OrderEntity, Integer> {
      * 
      * @return the number of order records
      */
-    @Override
     @Query("SELECT COUNT(*) FROM orders WHERE 1")
     long count();
 }

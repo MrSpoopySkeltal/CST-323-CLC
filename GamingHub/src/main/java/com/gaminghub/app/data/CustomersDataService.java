@@ -14,6 +14,7 @@ import com.gaminghub.app.data.entity.CustomerEntity;
 import com.gaminghub.app.data.mapper.CustomerRowMapper;
 import com.gaminghub.app.data.repository.CustomersRepository;
 
+
 /**
  * Service class for managing CustomerEntity data access.
  * Implements CRUD operations using Spring Data repository and JdbcTemplate.
@@ -80,7 +81,7 @@ public class CustomersDataService implements DataAccessInterface<CustomerEntity>
      * Creates a new customer record in the database.
      * 
      * @param t The CustomerEntity to create
-     * @return true if creation succeeded, false otherwise
+   
      */
     @Transactional
     @Override
@@ -102,7 +103,7 @@ public class CustomersDataService implements DataAccessInterface<CustomerEntity>
      * Updates an existing customer record in the database.
      * 
      * @param t The CustomerEntity with updated data
-     * @return true if update succeeded, false otherwise
+
      */
     @Transactional
     @Override
@@ -124,7 +125,7 @@ public class CustomersDataService implements DataAccessInterface<CustomerEntity>
      * Deletes a customer from the database using the CustomerEntity object.
      * 
      * @param t The CustomerEntity to delete
-     * @return true if deletion succeeded, false otherwise
+     * true
      */
     @Transactional
     @Override
@@ -136,7 +137,7 @@ public class CustomersDataService implements DataAccessInterface<CustomerEntity>
      * Deletes a customer from the database by its ID.
      * 
      * @param id The ID of the customer to delete
-     * @return true if deletion succeeded, false otherwise
+     * true
      */
     @Transactional
     @Override

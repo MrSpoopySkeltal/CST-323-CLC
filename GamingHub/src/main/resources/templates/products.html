@@ -1,110 +1,180 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <title>GameHub • Browse Games</title>
+	<title>GameHub • Browse Games</title>
 </head>
+
 <body th:replace="fragments/layout :: shell(~{::title}, ~{::section})">
-  <section>
-    <style>
-      .filters{ background:#121a32; border:1px solid var(--outline); border-radius:16px; padding:14px; display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
-      .field{ display:flex; flex-direction:column; gap:6px; }
-      label{ color:#c7d3ee; font-weight:700; font-size:12px; letter-spacing:.4px; text-transform:uppercase }
-      select, input{ width:100%; background:#0e1429; color:var(--text); border:1px solid #2a3557; border-radius:10px; padding:10px 12px; outline:none; }
-      .grid{ margin-top:22px; display:grid; gap:18px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
-      .name{ font-weight:800; margin:6px 0 }
-      .meta{ color:#a3b1cf; font-size:13px }
-      .price{ margin-top:10px; font-weight:900; color:#ff8f8f }
-      .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; border:none; border-radius:999px; padding:10px 14px; font-weight:800; }
-      .btn-primary{ background:linear-gradient(90deg, var(--accentA), var(--accentB)); color:#0b1227; }
-      .right{ text-align:right }
-    </style>
+	<section>
+		<style>
+			.filters {
+				background: #121a32;
+				border: 1px solid var(--outline);
+				border-radius: 16px;
+				padding: 14px;
+				display: grid;
+				gap: 12px;
+				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+			}
 
-    <div class="wrap">
-      <h1 class="title">Browse Games</h1>
-      <p class="sub">Discover your next favorite game from our extensive collection</p>
+			.field {
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+			}
 
-      <!-- Filters (GET -> backend returns filtered list) -->
-      <form class="filters" th:action="@{/products}" method="get">
-        <div class="field">
-          <label for="genre">Genre</label>
-          <select id="genre" name="genre" th:value="${selectedGenre}">
-            <option value="">All Genres</option>
-            <!-- If backend provides a list -->
-            <option th:if="${genres != null}" th:each="g : ${genres}" th:value="${g}" th:text="${g}">Action</option>
-            <!-- Fallback static options -->
-            <option th:unless="${genres != null}">Action</option>
-            <option th:unless="${genres != null}">RPG</option>
-            <option th:unless="${genres != null}">Racing</option>
-            <option th:unless="${genres != null}">Adventure</option>
-            <option th:unless="${genres != null}">Sports</option>
-          </select>
-        </div>
+			label {
+				color: #c7d3ee;
+				font-weight: 700;
+				font-size: 12px;
+				letter-spacing: .4px;
+				text-transform: uppercase
+			}
 
-        <div class="field">
-          <label for="platform">Platform</label>
-          <select id="platform" name="platform" th:value="${selectedPlatform}">
-            <option value="">All Platforms</option>
-            <option th:if="${platforms != null}" th:each="p : ${platforms}" th:value="${p}" th:text="${p}">PC</option>
-            <option th:unless="${platforms != null}">PC</option>
-            <option th:unless="${platforms != null}">PlayStation</option>
-            <option th:unless="${platforms != null}">Xbox</option>
-            <option th:unless="${platforms != null}">Nintendo</option>
-          </select>
-        </div>
+			select,
+			input {
+				width: 100%;
+				background: #0e1429;
+				color: var(--text);
+				border: 1px solid #2a3557;
+				border-radius: 10px;
+				padding: 10px 12px;
+				outline: none;
+			}
 
-        <div class="field">
-          <label for="maxPrice">Max Price</label>
-          <select id="maxPrice" name="maxPrice" th:value="${maxPrice}">
-            <option value="">Any Price</option>
-            <option value="20">$20</option>
-            <option value="40">$40</option>
-            <option value="60">$60</option>
-          </select>
-        </div>
+			.grid {
+				margin-top: 22px;
+				display: grid;
+				gap: 18px;
+				grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+			}
 
-        <div class="field">
-          <label for="minRating">Min Rating</label>
-          <select id="minRating" name="minRating" th:value="${minRating}">
-            <option value="">Any Rating</option>
-            <option value="3">3+</option>
-            <option value="4">4+</option>
-            <option value="4.5">4.5+</option>
-          </select>
-        </div>
+			.name {
+				font-weight: 800;
+				margin: 6px 0
+			}
 
-        <div class="field" style="align-self:end">
-          <button class="btn btn-primary" type="submit">Apply</button>
-        </div>
-      </form>
+			.meta {
+				color: #a3b1cf;
+				font-size: 13px
+			}
 
-      <!-- Results -->
-      <section class="grid">
-        <a class="card"
-           th:each="g : ${products}"
-           th:href="@{|/product/${g.id}|}"
-           th:aria-label="${g.name}">
-          <img class="thumb"
-               th:src="${g.imageUrl != null ? g.imageUrl : g.img}"
-               th:alt="${g.name}">
-          <div class="pad">
-            <div class="name" th:text="${g.name}">Game Name</div>
-            <div class="meta">
-              <span th:text="${g.genre}">Genre</span> •
-              <span th:text="${g.platform}">Platform</span> •
-              ⭐ <span th:text="${g.rating}">4.6</span>
-            </div>
-            <div class="price"
-                 th:text="${g.price != null ? #numbers.formatCurrency(g.price,'USD') : '$0.00'}">
-              $59.99
-            </div>
-          </div>
-        </a>
+			.price {
+				margin-top: 10px;
+				font-weight: 900;
+				color: #ff8f8f
+			}
 
-        <!-- Empty state -->
-        <p class="sub" th:if="${#lists.isEmpty(products)}">No products found.</p>
-      </section>
-    </div>
-  </section>
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				cursor: pointer;
+				border: none;
+				border-radius: 999px;
+				padding: 10px 14px;
+				font-weight: 800;
+			}
+
+			.btn-primary {
+				background: linear-gradient(90deg, var(--accentA), var(--accentB));
+				color: #0b1227;
+			}
+
+			.right {
+				text-align: right
+			}
+		</style>
+
+		<div class="wrap">
+			<h1 class="title">Browse Games</h1>
+			<p class="sub">Discover your next favorite game from our extensive collection</p>
+
+			<!-- Filters (GET -> backend returns filtered list) -->
+			<form class="filters" th:action="@{/products}" method="get">
+				<div class="field">
+					<label for="genre">Genre</label>
+					<select id="genre" name="genre" th:value="${selectedGenre}">
+						<option value="">All Genres</option>
+						<!-- If backend provides a list -->
+						<option th:if="${genres != null}" th:each="g : ${genres}" th:value="${g}" th:text="${g}">Action
+						</option>
+						<!-- Fallback static options -->
+						<option th:unless="${genres != null}">Action</option>
+						<option th:unless="${genres != null}">RPG</option>
+						<option th:unless="${genres != null}">Racing</option>
+						<option th:unless="${genres != null}">Adventure</option>
+						<option th:unless="${genres != null}">Sports</option>
+					</select>
+				</div>
+
+				<div class="field">
+					<label for="platform">Platform</label>
+					<select id="platform" name="platform" th:value="${selectedPlatform}">
+						<option value="">All Platforms</option>
+						<option th:if="${platforms != null}" th:each="p : ${platforms}" th:value="${p}" th:text="${p}">
+							PC</option>
+						<option th:unless="${platforms != null}">PC</option>
+						<option th:unless="${platforms != null}">PlayStation</option>
+						<option th:unless="${platforms != null}">Xbox</option>
+						<option th:unless="${platforms != null}">Nintendo</option>
+					</select>
+				</div>
+
+				<div class="field">
+					<label for="maxPrice">Max Price</label>
+					<select id="maxPrice" name="maxPrice" th:value="${maxPrice}">
+						<option value="">Any Price</option>
+						<option value="20">$20</option>
+						<option value="40">$40</option>
+						<option value="60">$60</option>
+					</select>
+				</div>
+
+				<div class="field">
+					<label for="minRating">Min Rating</label>
+					<select id="minRating" name="minRating" th:value="${minRating}">
+						<option value="">Any Rating</option>
+						<option value="3">3+</option>
+						<option value="4">4+</option>
+						<option value="4.5">4.5+</option>
+					</select>
+				</div>
+
+				<div class="field" style="align-self:end">
+					<button class="btn btn-primary" type="submit">Apply</button>
+				</div>
+			</form>
+
+			<!-- Results -->
+			<section class="grid">
+				<a class="card"
+				   th:each="g : ${products}"
+				   th:href="@{|/product/${g.game_id != null ? g.game_id : g.id}|}"> 
+				  <img class="thumb"
+				       th:src="${g.img != null ? g.img : g.imageUrl}"            
+				       th:alt="${g.title != null ? g.title : g.name}">           
+				  <div class="pad">
+				    <div class="name" th:text="${g.title != null ? g.title : g.name}">Game Name</div> 
+						<div class="meta">
+							<span th:text="${g.genre}">Genre</span> •
+							<span th:text="${g.platform}">Platform</span> •
+							⭐ <span th:text="${g.rating}">4.6</span>
+						</div>
+						<div class="price"
+							th:text="${g.price != null ? #numbers.formatCurrency(g.price,'USD') : '$0.00'}">
+							$59.99
+						</div>
+					</div>
+				</a>
+
+				<!-- Empty state -->
+				<p class="sub" th:if="${#lists.isEmpty(products)}">No products found.</p>
+			</section>
+		</div>
+	</section>
 </body>
-</html>
 
+</html>

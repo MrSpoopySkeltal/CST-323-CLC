@@ -1,135 +1,217 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <title>GameHub • Profile</title>
+	<title>GameHub • Profile</title>
 </head>
+
 <body th:replace="fragments/layout :: shell(~{::title}, ~{::section})">
-  <section>
-    <style>
-      .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:18px }
-      .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:12px }
-      label{ color:#c7d3ee; font-weight:700; font-size:12px; letter-spacing:.4px; text-transform:uppercase }
-      input, select, textarea{ width:100%; background:#0e1429; color:var(--text); border:1px solid #2a3557; border-radius:10px; padding:10px 12px; outline:none }
-      .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; border:none; border-radius:999px; padding:12px 16px; font-weight:800 }
-      .btn-primary{ background:linear-gradient(90deg, var(--accentA), var(--accentB)); color:#0b1227 }
-      .btn-ghost{ background:transparent; color:#e8eefc; border:1px solid var(--outline) }
-      .muted{ color:#9fb0c9 }
-      ul.plain{ list-style:none; padding:0; margin:0 }
-      li.cardish{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px; border:1px solid var(--outline); border-radius:12px; background:#121a32; margin:10px 0 }
-      .ok{ color:#49d3c3; font-weight:700; margin-left:6px }
-      .right{ text-align:right }
-    </style>
+	<section>
+		<style>
+			.grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 18px
+			}
 
-    <div class="wrap">
-      <h1 class="title">Profile</h1>
-      <p class="sub">Manage your account information and payment methods</p>
+			.field {
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+				margin-bottom: 12px
+			}
 
-      <section class="grid">
-        <!-- Manage Info -->
-        <div class="card">
-          <div class="pad">
-            <h2 style="margin:0 0 10px">Manage Info</h2>
+			label {
+				color: #c7d3ee;
+				font-weight: 700;
+				font-size: 12px;
+				letter-spacing: .4px;
+				text-transform: uppercase
+			}
 
-            <form th:action="@{/profile}" method="post" th:object="${user}">
-              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+			input,
+			select,
+			textarea {
+				width: 100%;
+				background: #0e1429;
+				color: var(--text);
+				border: 1px solid #2a3557;
+				border-radius: 10px;
+				padding: 10px 12px;
+				outline: none
+			}
 
-              <div class="field">
-                <label for="fullName">Full Name</label>
-                <input id="fullName" th:field="*{fullName}" placeholder="Jane Player"/>
-              </div>
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				cursor: pointer;
+				border: none;
+				border-radius: 999px;
+				padding: 12px 16px;
+				font-weight: 800
+			}
 
-              <div class="field">
-                <label for="email">Email</label>
-                <input id="email" type="email" th:field="*{email}" placeholder="jane@example.com"/>
-              </div>
+			.btn-primary {
+				background: linear-gradient(90deg, var(--accentA), var(--accentB));
+				color: #0b1227
+			}
 
-              <div class="field">
-                <label for="address">Address</label>
-                <textarea id="address" rows="3" th:field="*{address}" placeholder="Street, City, State, ZIP"></textarea>
-              </div>
+			.btn-ghost {
+				background: transparent;
+				color: #e8eefc;
+				border: 1px solid var(--outline)
+			}
 
-              <div class="right">
-                <button class="btn btn-primary" type="submit">Save Changes</button>
-              </div>
-            </form>
+			.muted {
+				color: #9fb0c9
+			}
 
-            <p class="muted" style="margin-top:10px" th:if="${saved}">Changes saved successfully.</p>
-          </div>
-        </div>
+			ul.plain {
+				list-style: none;
+				padding: 0;
+				margin: 0
+			}
 
-        <!-- Payment Methods -->
-        <div class="card">
-          <div class="pad">
-            <h2 style="margin:0 0 10px">Payment Methods</h2>
+			li.cardish {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+				padding: 12px;
+				border: 1px solid var(--outline);
+				border-radius: 12px;
+				background: #121a32;
+				margin: 10px 0
+			}
 
-            <ul class="plain">
-              <li class="cardish" th:each="pm : ${paymentMethods}">
-                <div>
-                  <div>
-                    <strong th:text="${pm.brand}">Visa</strong>
-                    •••• <span th:text="${pm.last4}">4242</span>
-                    <span th:if="${pm.default}" class="ok">Default</span>
-                  </div>
-                  <div class="muted" style="font-size:13px">
-                    Exp <span th:text="${pm.exp}">08/28</span>
-                  </div>
-                </div>
-                <div style="display:flex; gap:8px">
-                  <form th:action="@{|/profile/payment/${pm.id}/default|}" method="post">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <button class="btn btn-ghost" type="submit">Make Default</button>
-                  </form>
-                  <form th:action="@{|/profile/payment/${pm.id}/remove|}" method="post">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <button class="btn btn-ghost" type="submit">Remove</button>
-                  </form>
-                </div>
-              </li>
+			.ok {
+				color: #49d3c3;
+				font-weight: 700;
+				margin-left: 6px
+			}
 
-              <!-- Fallback demo if none provided -->
-              <li class="cardish" th:if="${paymentMethods == null or #lists.isEmpty(paymentMethods)}">
-                <div>
-                  <div><strong>Visa</strong> •••• 4242</div>
-                  <div class="muted" style="font-size:13px">Exp 08/28</div>
-                </div>
-                <div style="display:flex; gap:8px">
-                  <button class="btn btn-ghost" disabled>Make Default</button>
-                  <button class="btn btn-ghost" disabled>Remove</button>
-                </div>
-              </li>
-            </ul>
+			.right {
+				text-align: right
+			}
+		</style>
 
-            <hr style="border-color:#2a3557; opacity:.5; margin:14px 0">
+		<div class="wrap">
+			<h1 class="title">Profile</h1>
+			<p class="sub">Manage your account information and payment methods</p>
 
-            <form th:action="@{/profile/payment}" method="post">
-              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+			<section class="grid">
+				<!-- Manage Info -->
+				<div class="card">
+					<div class="pad">
+						<h2 style="margin:0 0 10px">Manage Info</h2>
 
-              <div class="field">
-                <label for="brand">Card Brand</label>
-                <select id="brand" name="brand">
-                  <option>Visa</option><option>Mastercard</option><option>Amex</option>
-                </select>
-              </div>
+						<form th:action="@{/profile}" method="post" th:object="${user}">
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-              <div class="field">
-                <label for="last4">Last 4</label>
-                <input id="last4" name="last4" maxlength="4" placeholder="4242"/>
-              </div>
+							<div class="field">
+								<label for="fullName">Full Name</label>
+								<input id="fullName" th:field="*{fullName}" placeholder="Jane Player" />
+							</div>
 
-              <div class="field">
-                <label for="exp">Expiry (MM/YY)</label>
-                <input id="exp" name="exp" placeholder="08/28"/>
-              </div>
+							<div class="field">
+								<label for="email">Email</label>
+								<input id="email" type="email" th:field="*{email}" placeholder="jane@example.com" />
+							</div>
 
-              <div class="right">
-                <button class="btn btn-primary" type="submit">Add Payment Method</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
-    </div>
-  </section>
+							<div class="field">
+								<label for="address">Address</label>
+								<textarea id="address" rows="3" th:field="*{address}"
+									placeholder="Street, City, State, ZIP"></textarea>
+							</div>
+
+							<div class="right">
+								<button class="btn btn-primary" type="submit">Save Changes</button>
+							</div>
+						</form>
+
+						<p class="muted" style="margin-top:10px" th:if="${saved}">Changes saved successfully.</p>
+					</div>
+				</div>
+
+				<!-- Payment Methods -->
+				<div class="card">
+					<div class="pad">
+						<h2 style="margin:0 0 10px">Payment Methods</h2>
+
+						<ul class="plain">
+							<li class="cardish" th:each="pm : ${paymentMethods}">
+								<div>
+									<div>
+										<strong th:text="${pm.brand}">Visa</strong>
+										•••• <span th:text="${pm.last4}">4242</span>
+										<span th:if="${pm.default}" class="ok">Default</span>
+									</div>
+									<div class="muted" style="font-size:13px">
+										Exp <span th:text="${pm.exp}">08/28</span>
+									</div>
+								</div>
+								<div style="display:flex; gap:8px">
+									<form th:action="@{|/profile/payment/${pm.id}/default|}" method="post">
+										<input type="hidden" th:name="${_csrf.parameterName}"
+											th:value="${_csrf.token}" />
+										<button class="btn btn-ghost" type="submit">Make Default</button>
+									</form>
+									<form th:action="@{|/profile/payment/${pm.id}/remove|}" method="post">
+										<input type="hidden" th:name="${_csrf.parameterName}"
+											th:value="${_csrf.token}" />
+										<button class="btn btn-ghost" type="submit">Remove</button>
+									</form>
+								</div>
+							</li>
+
+							<!-- Fallback demo if none provided -->
+							<li class="cardish" th:if="${paymentMethods == null or #lists.isEmpty(paymentMethods)}">
+								<div>
+									<div><strong>Visa</strong> •••• 4242</div>
+									<div class="muted" style="font-size:13px">Exp 08/28</div>
+								</div>
+								<div style="display:flex; gap:8px">
+									<button class="btn btn-ghost" disabled>Make Default</button>
+									<button class="btn btn-ghost" disabled>Remove</button>
+								</div>
+							</li>
+						</ul>
+
+						<hr style="border-color:#2a3557; opacity:.5; margin:14px 0">
+
+						<form th:action="@{/profile/payment}" method="post">
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+							<div class="field">
+								<label for="brand">Card Brand</label>
+								<select id="brand" name="brand">
+									<option>Visa</option>
+									<option>Mastercard</option>
+									<option>Amex</option>
+								</select>
+							</div>
+
+							<div class="field">
+								<label for="last4">Last 4</label>
+								<input id="last4" name="last4" maxlength="4" placeholder="4242" />
+							</div>
+
+							<div class="field">
+								<label for="exp">Expiry (MM/YY)</label>
+								<input id="exp" name="exp" placeholder="08/28" />
+							</div>
+
+							<div class="right">
+								<button class="btn btn-primary" type="submit">Add Payment Method</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</section>
+		</div>
+	</section>
 </body>
-</html>
 
+</html>

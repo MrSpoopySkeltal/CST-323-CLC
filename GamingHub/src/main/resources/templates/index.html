@@ -1,79 +1,82 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <title>GameHub • Home</title>
+	<title>GameHub • Home</title>
 </head>
+
 <body th:replace="fragments/layout :: shell(~{::title}, ~{::section})">
-  <section>
-    <!-- HERO -->
-    <section class="hero grid-bg">
-      <h1 class="headline">Welcome to GameHub</h1>
-      <p class="sub">Discover the latest and greatest games for every platform</p>
+	<section>
+		<!-- HERO -->
+		<section class="hero grid-bg">
+			<h1 class="headline">Welcome to GameHub</h1>
+			<p class="sub">Discover the latest and greatest games for every platform</p>
 
-      <div class="cta-row">
-        <a class="btn btn-primary" th:href="@{/products}">Browse Games</a>
-        <a class="btn btn-ghost" href="#featured">Featured Games</a>
-      </div>
+			<div class="cta-row">
+				<a class="btn btn-primary" th:href="@{/products}">Browse Games</a>
+				<a class="btn btn-ghost" href="#featured">Featured Games</a>
+			</div>
 
-      <!-- CAROUSEL -->
-      <div class="carousel" id="carousel">
-        <img id="slide" alt="Featured Game">
-        <div class="dots" id="dots"></div>
-      </div>
-    </section>
+			<!-- CAROUSEL -->
+			<div class="carousel" id="carousel">
+				<img id="slide" alt="Featured Game">
+				<div class="dots" id="dots"></div>
+			</div>
+		</section>
 
-    <!-- FEATURED -->
-    <section class="section" id="featured">
-      <h2 class="title">Featured Games</h2>
-      <div class="cards">
-        <article class="card">
-          <div class="icon">🎮</div>
-          <h3>Cyber Quest 2024</h3>
-          <p>An epic sci-fi adventure with stunning visuals and immersive gameplay</p>
-          <div class="price">$59.99</div>
-        </article>
-        <article class="card">
-          <div class="icon">✈️</div>
-          <h3>Fantasy Legends</h3>
-          <p>Embark on a magical journey through enchanted realms</p>
-          <div class="price">$49.99</div>
-        </article>
-        <article class="card">
-          <div class="icon">🏎️</div>
-          <h3>Speed Racers</h3>
-          <p>High-octane racing action with customizable vehicles</p>
-          <div class="price">$39.99</div>
-        </article>
-      </div>
-    </section>
+		<!-- FEATURED -->
+		<section class="section" id="featured">
+			<h2 class="title">Featured Games</h2>
+			<div class="cards">
+				<article class="card">
+					<div class="icon">🎮</div>
+					<h3>Cyber Quest 2024</h3>
+					<p>An epic sci-fi adventure with stunning visuals and immersive gameplay</p>
+					<div class="price">$59.99</div>
+				</article>
+				<article class="card">
+					<div class="icon">✈️</div>
+					<h3>Fantasy Legends</h3>
+					<p>Embark on a magical journey through enchanted realms</p>
+					<div class="price">$49.99</div>
+				</article>
+				<article class="card">
+					<div class="icon">🏎️</div>
+					<h3>Speed Racers</h3>
+					<p>High-octane racing action with customizable vehicles</p>
+					<div class="price">$39.99</div>
+				</article>
+			</div>
+		</section>
 
-    <!-- Page-only JS (carousel) -->
-    <script>
-      // Simple image carousel (no libraries)
-      const images = [
-        'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1618005198919-d3d4b5a92eaf?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1529619768328-e37af76c6fe5?q=80&w=1600&auto=format&fit=crop'
-      ];
-      const slide = document.getElementById('slide');
-      const dotsWrap = document.getElementById('dots');
-      let i = 0, timer;
+		<!-- Page-only JS (carousel) -->
+		<script>
+			// Simple image carousel (no libraries)
+			const images = [
+				'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop',
+				'https://images.unsplash.com/photo-1618005198919-d3d4b5a92eaf?q=80&w=1600&auto=format&fit=crop',
+				'https://images.unsplash.com/photo-1529619768328-e37af76c6fe5?q=80&w=1600&auto=format&fit=crop'
+			];
+			const slide = document.getElementById('slide');
+			const dotsWrap = document.getElementById('dots');
+			let i = 0, timer;
 
-      function renderDots(){
-        dotsWrap.innerHTML = '';
-        images.forEach((_, idx)=>{
-          const d=document.createElement('div');
-          d.className='dot'+(idx===i?' active':'');
-          d.addEventListener('click',()=>{ i=idx; show(); reset(); });
-          dotsWrap.appendChild(d);
-        });
-      }
-      function show(){ slide.src = images[i]; renderDots(); }
-      function play(){ timer = setInterval(()=>{ i=(i+1)%images.length; show(); }, 3500); }
-      function reset(){ clearInterval(timer); play(); }
+			function renderDots() {
+				dotsWrap.innerHTML = '';
+				images.forEach((_, idx) => {
+					const d = document.createElement('div');
+					d.className = 'dot' + (idx === i ? ' active' : '');
+					d.addEventListener('click', () => {i = idx; show(); reset();});
+					dotsWrap.appendChild(d);
+				});
+			}
+			function show() {slide.src = images[i]; renderDots();}
+			function play() {timer = setInterval(() => {i = (i + 1) % images.length; show();}, 3500);}
+			function reset() {clearInterval(timer); play();}
 
-      show(); play();
-    </script>
-  </section>
+			show(); play();
+		</script>
+	</section>
 </body>
+
 </html>

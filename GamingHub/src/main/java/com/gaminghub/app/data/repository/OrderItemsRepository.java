@@ -27,7 +27,6 @@ public interface OrderItemsRepository extends CrudRepository<OrderItemEntity, In
      * 
      * @return a list of all {@link OrderItemEntity} records
      */
-    @Override
     @Query("SELECT * FROM order_items WHERE 1")
     List<OrderItemEntity> findAll();
 
@@ -36,7 +35,6 @@ public interface OrderItemsRepository extends CrudRepository<OrderItemEntity, In
      * 
      * @return the number of order item records
      */
-    @Override
     @Query("SELECT COUNT(*) FROM order_items WHERE 1")
     long count();
 }

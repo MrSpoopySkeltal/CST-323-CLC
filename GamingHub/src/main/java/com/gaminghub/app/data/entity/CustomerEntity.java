@@ -1,11 +1,9 @@
 package com.gaminghub.app.data.entity;
 
 import java.sql.Timestamp;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-
 import com.gaminghub.app.presentation.model.CustomerModel;
 
 /**

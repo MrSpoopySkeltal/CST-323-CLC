@@ -1,82 +1,130 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <title>GameHub • About & Support</title>
+	<title>GameHub • About & Support</title>
 </head>
+
 <body th:replace="fragments/layout :: shell(~{::title}, ~{::section})">
-  <section>
-    <style>
-      /* page-specific layout */
-      .grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap:18px }
-      .muted{ color:#9fb0c9 }
-      .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:12px }
-      label{ color:#c7d3ee; font-weight:700; font-size:12px; letter-spacing:.4px; text-transform:uppercase }
-      input, textarea{
-        width:100%; background:#0e1429; color:var(--text);
-        border:1px solid #2a3557; border-radius:10px; padding:10px 12px; outline:none;
-      }
-      .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; border:none; border-radius:999px; padding:12px 16px; font-weight:800; }
-      .btn-primary{ background:linear-gradient(90deg, var(--accentA), var(--accentB)); color:#0b1227; }
-    </style>
+	<section>
+		<style>
+			/* page-specific layout */
+			.grid-2 {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 18px
+			}
 
-    <div class="wrap">
-      <h1 class="title">About Us & Support</h1>
-      <p class="sub">We’re building the smoothest way to discover, buy, and play games.</p>
+			.muted {
+				color: #9fb0c9
+			}
 
-      <section class="grid-2">
-        <!-- Our Story -->
-        <article class="card">
-          <div class="pad">
-            <h2 style="margin:0 0 10px">Our Story</h2>
-            <p class="muted">
-              GameHub is a student-built storefront designed with performance, clean UX, and modern web standards.
-              We keep things fast, friendly, and accessible—so you get from “browse” to “play” without friction.
-            </p>
-            <h3 style="margin:16px 0 6px">What we value</h3>
-            <ul class="muted" style="line-height:1.9; padding-left:18px">
-              <li>Speedy browsing and checkout</li>
-              <li>Clear product info and reviews</li>
-              <li>Secure payments and privacy</li>
-              <li>Helpful support that’s actually helpful</li>
-            </ul>
-          </div>
-        </article>
+			.field {
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+				margin-bottom: 12px
+			}
 
-        <!-- Support -->
-        <article class="card" id="support">
-          <div class="pad">
-            <h2 style="margin:0 0 10px">Support</h2>
-            <p class="muted">Questions or issues? Send us a note and we’ll get back to you.</p>
+			label {
+				color: #c7d3ee;
+				font-weight: 700;
+				font-size: 12px;
+				letter-spacing: .4px;
+				text-transform: uppercase
+			}
 
-            <form th:action="@{/support}" method="post">
-              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+			input,
+			textarea {
+				width: 100%;
+				background: #0e1429;
+				color: var(--text);
+				border: 1px solid #2a3557;
+				border-radius: 10px;
+				padding: 10px 12px;
+				outline: none;
+			}
 
-              <div class="field">
-                <label for="sname">Name</label>
-                <input id="sname" name="name" placeholder="Jane Player" required />
-              </div>
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				cursor: pointer;
+				border: none;
+				border-radius: 999px;
+				padding: 12px 16px;
+				font-weight: 800;
+			}
 
-              <div class="field">
-                <label for="semail">Email</label>
-                <input id="semail" name="email" type="email" placeholder="jane@example.com" required />
-              </div>
+			.btn-primary {
+				background: linear-gradient(90deg, var(--accentA), var(--accentB));
+				color: #0b1227;
+			}
+		</style>
 
-              <div class="field">
-                <label for="smsg">Message</label>
-                <textarea id="smsg" name="message" rows="5" placeholder="How can we help?" required></textarea>
-              </div>
+		<div class="wrap">
+			<h1 class="title">About Us & Support</h1>
+			<p class="sub">We’re building the smoothest way to discover, buy, and play games.</p>
 
-              <div style="display:flex; gap:10px; justify-content:flex-end">
-                <button class="btn btn-primary" type="submit">Send</button>
-              </div>
-            </form>
+			<section class="grid-2">
+				<!-- Our Story -->
+				<article class="card">
+					<div class="pad">
+						<h2 style="margin:0 0 10px">Our Story</h2>
+						<p class="muted">
+							GameHub is a student-built storefront designed with performance, clean UX, and modern web
+							standards.
+							We keep things fast, friendly, and accessible—so you get from “browse” to “play” without
+							friction.
+						</p>
+						<h3 style="margin:16px 0 6px">What we value</h3>
+						<ul class="muted" style="line-height:1.9; padding-left:18px">
+							<li>Speedy browsing and checkout</li>
+							<li>Clear product info and reviews</li>
+							<li>Secure payments and privacy</li>
+							<li>Helpful support that’s actually helpful</li>
+						</ul>
+					</div>
+				</article>
 
-            <p class="muted" style="margin-top:10px" th:if="${supportSent}">Thanks! We’ll reply to your email shortly.</p>
-          </div>
-        </article>
-      </section>
-    </div>
-  </section>
+				<!-- Support -->
+				<article class="card" id="support">
+					<div class="pad">
+						<h2 style="margin:0 0 10px">Support</h2>
+						<p class="muted">Questions or issues? Send us a note and we’ll get back to you.</p>
+
+						<form th:action="@{/support}" method="post">
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+							<div class="field">
+								<label for="sname">Name</label>
+								<input id="sname" name="name" placeholder="Jane Player" required />
+							</div>
+
+							<div class="field">
+								<label for="semail">Email</label>
+								<input id="semail" name="email" type="email" placeholder="jane@example.com" required />
+							</div>
+
+							<div class="field">
+								<label for="smsg">Message</label>
+								<textarea id="smsg" name="message" rows="5" placeholder="How can we help?"
+									required></textarea>
+							</div>
+
+							<div style="display:flex; gap:10px; justify-content:flex-end">
+								<button class="btn btn-primary" type="submit">Send</button>
+							</div>
+						</form>
+
+						<p class="muted" style="margin-top:10px" th:if="${supportSent}">Thanks! We’ll reply to your
+							email shortly.</p>
+					</div>
+				</article>
+			</section>
+		</div>
+	</section>
 </body>
-</html>
 
+</html>

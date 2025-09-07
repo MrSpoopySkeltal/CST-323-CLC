@@ -14,7 +14,7 @@ import com.gaminghub.app.presentation.model.GameModel;
  * Service implementation for handling business logic related to games.
  */
 @Service
-public class GamesBusinessService implements GamesBusinessServiceInterface {
+public abstract class GamesBusinessService implements GamesBusinessServiceInterface {
 
     @Autowired
     GamesDataService service;
@@ -42,8 +42,7 @@ public class GamesBusinessService implements GamesBusinessServiceInterface {
      * @param minRating The minimum rating to filter by, or null to ignore
      * @return List of GameModel objects matching the filter criteria
      */
-    @Override
-    public List<GameModel> getFilteredGames(String genre, String platform, Float maxPrice, Float minRating) {
+    public List<GameModel> getFilteredGames(String genre, String platform, Double maxPrice, Double minRating) {
         return service.findAll()
                       .stream()
                       .filter(g -> genre == null || genre.isEmpty() || g.getGenre().equalsIgnoreCase(genre))
