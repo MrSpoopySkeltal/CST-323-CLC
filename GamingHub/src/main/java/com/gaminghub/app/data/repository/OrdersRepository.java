@@ -20,7 +20,7 @@ import com.gaminghub.app.data.entity.OrderEntity;
  * @see OrderEntity
  */
 @Repository
-public interface OrdersRepository extends CustomersRepository<OrderEntity, Integer> {
+public interface OrdersRepository extends CrudRepository<OrderEntity, Integer> {
 
     /**
      * Retrieves all orders from the database.

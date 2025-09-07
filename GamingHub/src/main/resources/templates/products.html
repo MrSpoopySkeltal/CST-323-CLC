@@ -164,7 +164,7 @@
 							⭐ <span th:text="${g.rating}">4.6</span>
 						</div>
 						<div class="price"
-							th:text="${g.price != null ? #numbers.formatCurrency(g.price,'USD') : '$0.00'}">
+							th:text="${g.price != null ? '$' + #numbers.formatDecimal(g.price, 1, 2) : '$0.00'}">
 							$59.99
 						</div>
 					</div>

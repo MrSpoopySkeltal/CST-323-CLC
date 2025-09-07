@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>GameHub • Cart / Checkout</title>
+</head>
+
+<body th:replace="fragments/layout :: shell(~{::title}, ~{::section})">
+	<section>
+		<style>
+			.stepper {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: 8px;
+				margin: 14px 0 24px
+			}
+
+			.step {
+				text-align: center;
+				padding: 10px;
+				border: 1px solid var(--outline);
+				border-radius: 10px;
+				background: #121a32;
+				color: #9fb0c9;
+				font-weight: 700;
+				font-size: 13px
+			}
+
+			.step.active {
+				color: #0b1227;
+				background: linear-gradient(90deg, var(--accentA), var(--accentB));
+				border-color: transparent
+			}
+
+			.row {
+				display: grid;
+				grid-template-columns: 1fr 320px;
+				gap: 18px
+			}
+
+			table {
+				width: 100%;
+				border-collapse: collapse
+			}
+
+			th,
+			td {
+				text-align: left;
+				padding: 10px;
+				border-bottom: 1px solid #2a3557
+			}
+
+			th {
+				color: #c7d3ee;
+				font-size: 12px;
+				letter-spacing: .4px;
+				text-transform: uppercase
+			}
+
+			.right {
+				text-align: right
+			}
+
+			.actions {
+				display: flex;
+				gap: 10px;
+				justify-content: flex-end;
+				margin-top: 14px
+			}
+
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 8px;
+				cursor: pointer;
+				border: none;
+				border-radius: 999px;
+				padding: 12px 16px;
+				font-weight: 800
+			}
+
+			.btn-primary {
+				background: linear-gradient(90deg, var(--accentA), var(--accentB));
+				color: #0b1227
+			}
+
+			.btn-ghost {
+				background: transparent;
+				color: #e8eefc;
+				border: 1px solid var(--outline)
+			}
+
+			.card {
+				background: linear-gradient(180deg, #151b31, #131833);
+				border: 1px solid var(--outline);
+				border-radius: 16px;
+				overflow: hidden
+			}
+
+			.pad {
+				padding: 16px
+			}
+
+			.muted {
+				color: #9fb0c9
+			}
+		</style>
+
+		<div class="wrap">
+			<h1 class="title">Checkout</h1>
+			<p class="sub">Review items, enter your details, choose payment, and confirm your order</p>
+
+			<!-- Stepper -->
+			<div class="stepper">
+				<div class="step" data-step="1">1. Review</div>
+				<div class="step" data-step="2">2. User Info</div>
+				<div class="step" data-step="3">3. Payment</div>
+				<div class="step" data-step="4">4. Confirmation</div>
+			</div>
+
+			<div class="row">
+				<!-- Left: dynamic panel -->
+				<section class="card" id="panel">
+					<div class="pad" id="panelInner">
+						<!-- SSR fallback (if JS off): Order Review -->
+						<h2 style="margin:0 0 8px">Order Review</h2>
+						<table>
+							<thead>
+								<tr>
+									<th>Item</th>
+									<th>Platform</th>
+									<th class="right">Qty</th>
+									<th class="right">Price</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="it: ${cart?.items}">
+									<td th:text="${it.name}">Game Name</td>
+									<td th:text="${it.platform}">PC</td>
+									<td class="right" th:text="${it.qty}">1</td>
+									<td class="right" th:text="${#numbers.formatCurrency(it.price,'USD')}">$59.99</td>
+								</tr>
+								<tr th:if="${cart == null || #lists.isEmpty(cart.items)}">
+									<td>Sample Item</td>
+									<td>PC</td>
+									<td class="right">1</td>
+									<td class="right">$59.99</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="actions">
+							<button class="btn btn-primary" id="toUser">Next: User Info</button>
+						</div>
+					</div>
+				</section>
+
+				<!-- Right: order summary -->
+				<aside class="card">
+					<div class="pad">
+						<h3 style="margin:0 0 10px">Order Summary</h3>
+						<div style="display:flex;justify-content:space-between;margin:6px 0">
+							<span>Subtotal</span>
+							<strong id="subtotal"
+								th:text="${cart != null} ? ${#numbers.formatCurrency(cart.subtotal,'USD')} : '$59.99'">$59.99</strong>
+						</div>
+						<div style="display:flex;justify-content:space-between;margin:6px 0">
+							<span>Tax</span>
+							<strong id="tax"
+								th:text="${cart != null} ? ${#numbers.formatCurrency(cart.tax,'USD')} : '$4.80'">$4.80</strong>
+						</div>
+						<div style="display:flex;justify-content:space-between;margin:6px 0">
+							<span>Shipping</span>
+							<strong id="ship"
+								th:text="${cart != null} ? ${#numbers.formatCurrency(cart.shipping,'USD')} : '$0.00'">$0.00</strong>
+						</div>
+						<hr style="border-color:#2a3557;opacity:.5;margin:10px 0">
+						<div style="display:flex;justify-content:space-between;margin:6px 0;font-weight:900">
+							<span>Total</span>
+							<strong id="total"
+								th:text="${cart != null} ? ${#numbers.formatCurrency(cart.total,'USD')} : '$64.79'">$64.79</strong>
+						</div>
+						<p class="muted" style="margin-top:10px">Secure checkout with encrypted payment.</p>
+					</div>
+				</aside>
+			</div>
+		</div>
+
+		<!-- Minimal JS stepper (front-end only; no backend changes needed) -->
+		<script>
+			const steps = Array.from(document.querySelectorAll('.step'));
+			let current = 1;
+
+			// If backend didn’t inject items, use a tiny fallback from localStorage
+			const lsCart = (() => {try {return JSON.parse(localStorage.getItem('cart') || '[]');} catch {return [];} })();
+			const hasLs = lsCart.length > 0;
+
+			function setActive() {steps.forEach(s => s.classList.toggle('active', Number(s.dataset.step) === current));}
+
+			function reviewPanel() {
+				const items = hasLs ? lsCart : null; // if null, SSR fallback table remains
+				if (!items) {
+					return document.getElementById('panelInner').innerHTML; // keep SSR fallback
+				}
+				const rows = items.map(it => `
+          <tr>
+            <td>${it.name || 'Item'}</td>
+            <td>${it.platform || '—'}</td>
+            <td class="right">${it.qty || 1}</td>
+            <td class="right">$${Number(it.price || 0).toFixed(2)}</td>
+          </tr>`).join('');
+				return `
+          <div class="pad">
+            <h2 style="margin:0 0 8px">Order Review</h2>
+            <table>
+              <thead><tr><th>Item</th><th>Platform</th><th class="right">Qty</th><th class="right">Price</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+            <div class="actions">
+              <button class="btn btn-primary" id="toUser">Next: User Info</button>
+            </div>
+          </div>`;
+			}
+
+			function userPanel() {
+				return `
+          <div class="pad">
+            <h2 style="margin:0 0 8px">User Information</h2>
+            <div class="field"><label for="fullName">Full Name</label><input id="fullName" placeholder="Jane Player"></div>
+            <div class="field"><label for="email">Email</label><input id="email" type="email" placeholder="jane@example.com"></div>
+            <div class="field"><label for="address">Address</label><textarea id="address" rows="3" placeholder="Street, City, State, ZIP"></textarea></div>
+            <div class="actions">
+              <button class="btn btn-ghost" id="backReview">Back</button>
+              <button class="btn btn-primary" id="toPayment">Next: Payment</button>
+            </div>
+          </div>`;
+			}
+
+			function paymentPanel() {
+				return `
+          <div class="pad">
+            <h2 style="margin:0 0 8px">Payment Method</h2>
+            <div class="field"><label for="cardName">Name on Card</label><input id="cardName" placeholder="Jane Player"></div>
+            <div class="field"><label for="cardNumber">Card Number</label><input id="cardNumber" inputmode="numeric" placeholder="4242 4242 4242 4242"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div class="field"><label for="exp">Expiry</label><input id="exp" placeholder="MM/YY"></div>
+              <div class="field"><label for="cvc">CVC</label><input id="cvc" placeholder="123"></div>
+            </div>
+            <div class="actions">
+              <button class="btn btn-ghost" id="backUser">Back</button>
+              <button class="btn btn-primary" id="toConfirm">Review & Confirm</button>
+            </div>
+          </div>`;
+			}
+
+			function confirmPanel() {
+				return `
+          <div class="pad">
+            <h2 style="margin:0 0 8px">Confirmation</h2>
+            <p class="muted">Review your details and place your order.</p>
+            <ul class="muted" style="line-height:1.8">
+              <li>Items: ${(hasLs ? lsCart.length : (document.querySelectorAll('tbody tr').length || 1))}</li>
+              <li>Email: <span id="confEmail">${document.getElementById('email')?.value || 'jane@example.com'}</span></li>
+            </ul>
+            <div class="actions">
+              <button class="btn btn-ghost" id="backPayment">Back</button>
+              <button class="btn btn-primary" id="placeOrder">Place Order</button>
+            </div>
+          </div>`;
+			}
+
+			const panelInnerEl = document.getElementById('panelInner');
+			function render() {
+				setActive();
+				if (current === 1) panelInnerEl.innerHTML = reviewPanel();
+				if (current === 2) panelInnerEl.innerHTML = userPanel();
+				if (current === 3) panelInnerEl.innerHTML = paymentPanel();
+				if (current === 4) panelInnerEl.innerHTML = confirmPanel();
+
+				const q = id => panelInnerEl.querySelector('#' + id);
+				q('toUser')?.addEventListener('click', () => {current = 2; render();});
+				q('backReview')?.addEventListener('click', () => {current = 1; render();});
+				q('toPayment')?.addEventListener('click', () => {current = 3; render();});
+				q('backUser')?.addEventListener('click', () => {current = 2; render();});
+				q('toConfirm')?.addEventListener('click', () => {current = 4; render();});
+				q('backPayment')?.addEventListener('click', () => {current = 3; render();});
+				q('placeOrder')?.addEventListener('click', () => {
+					panelInnerEl.innerHTML = `
+            <div class="pad">
+              <h2 style="margin:0 0 8px">Order Placed 🎉</h2>
+              <p class="muted">Thanks! Your order is confirmed. A receipt was sent to your email.</p>
+              <div class="actions"><a class="btn btn-primary" href="/products">Continue Shopping</a></div>
+            </div>`;
+					current = 4; setActive();
+					localStorage.removeItem('cart');
+					const cc = document.getElementById('cartCount'); if (cc) cc.textContent = 0;
+				});
+			}
+			render();
+		</script>
+	</section>
+</body>
+
+</html>

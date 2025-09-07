@@ -14,7 +14,7 @@ import com.gaminghub.app.presentation.model.GameModel;
  * Service implementation for handling business logic related to games.
  */
 @Service
-public abstract class GamesBusinessService implements GamesBusinessServiceInterface {
+public class GamesBusinessService implements GamesBusinessServiceInterface {
 
     @Autowired
     GamesDataService service;
@@ -132,4 +132,16 @@ public abstract class GamesBusinessService implements GamesBusinessServiceInterf
     public int getGameCount() {
         return service.getCount();
     }
+
+	@Override
+	public List<GameModel> getFilteredGames(String genre, String platform, Float maxPrice, Float minRating) {
+		return service.findAll()
+					  .stream()
+					  .filter(g -> genre == null || genre.isEmpty() || g.getGenre().equalsIgnoreCase(genre))
+					  .filter(g -> platform == null || platform.isEmpty() || g.getPlatform().equalsIgnoreCase(platform))
+					  .filter(g -> maxPrice == null || g.getPrice() <= maxPrice)
+					  .filter(g -> minRating == null || g.getRating() >= minRating)
+					  .map(GameEntity::toModel)
+					  .collect(Collectors.toList());
+	}
 }
